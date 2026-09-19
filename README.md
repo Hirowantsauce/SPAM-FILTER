@@ -1,10 +1,10 @@
 # SVM-Based Email Spam Detection
 
-A machine learning pipeline that classifies SMS/email messages as spam or ham (legitimate), comparing four classifiers — Logistic Regression, Naive Bayes, SVM, and Random Forest — on TF-IDF text features. The Linear SVM is the best-performing model (spam F1 = 0.9514, ROC-AUC = 0.9944).
+A machine learning pipeline that classifies SMS/email messages as spam or ham (legitimate), comparing four classifiers — Logistic Regression, Naive Bayes, SVM, and Random Forest — on TF-IDF text features. The Linear SVM is the best-performing model (spam F1 = 0.9514, ROC-AUC = 0.9944). Includes a Streamlit web UI for trying the model interactively.
 
 ## Project Description
 
-This project builds an end-to-end text classification pipeline: load and clean a labeled message dataset, extract TF-IDF features, train and cross-validate four supervised classifiers, and evaluate them on accuracy, precision, recall, F1, and ROC-AUC — with spam explicitly scored as the positive class throughout, since the dataset is moderately imbalanced (86.6% ham / 13.4% spam). The best model is used in a `verify_email()` function that classifies a new message end-to-end, directly from the fitted in-memory model (no files saved to disk).
+This project builds an end-to-end text classification pipeline: load and clean a labeled message dataset, extract TF-IDF features, train and cross-validate four supervised classifiers, and evaluate them on accuracy, precision, recall, F1, and ROC-AUC — with spam explicitly scored as the positive class throughout, since the dataset is moderately imbalanced (86.6% ham / 13.4% spam). The best model is used in a `verify_email()` function that classifies a new message end-to-end, directly from the fitted in-memory model (no files saved to disk). A standalone Streamlit app (`app.py`) wraps this same pipeline in a simple browser UI for trying it interactively.
 
 Full methodology, results, and discussion are in the project report (`.docx`).
 
@@ -21,6 +21,7 @@ Full methodology, results, and discussion are in the project report (`.docx`).
 - pandas, numpy — data loading and manipulation
 - scikit-learn — TF-IDF vectorization, model training, cross-validation, evaluation metrics
 - matplotlib, seaborn — charts (model comparison, confusion matrices, ROC curves)
+- Streamlit — interactive web UI for the deployed model (`app.py`)
 - Jupyter Notebook
 
 ## Setup / Run Instructions
@@ -31,10 +32,10 @@ Full methodology, results, and discussion are in the project report (`.docx`).
    ```
 
 2. **Add the dataset**
-   Place `mail_data.csv` in the same folder as the notebook. The notebook expects two columns: `Category` (spam/ham) and `Message` (text).
+   Place `mail_data.csv` in the same folder as the notebook and `app.py`. It's expected to have two columns: `Category` (spam/ham) and `Message` (text).
 
 3. **Update the file path if needed**
-   The notebook loads the dataset with:
+   Both the notebook and `app.py` load the dataset with:
    ```python
    df = pd.read_csv("mail_data.csv")
    ```
@@ -44,7 +45,17 @@ Full methodology, results, and discussion are in the project report (`.docx`).
    ```bash
    jupyter notebook
    ```
-   Open the `.ipynb` file and run all cells in order, top to bottom.
+   Open the `.ipynb` file and run all cells in order, top to bottom. This reproduces the full analysis: data exploration, preprocessing, all four models, cross-validation, ROC/AUC, and the results discussed in the report.
+
+## Running the Web UI
+
+`app.py` is a Streamlit app that wraps the trained SVM model in a simple browser interface — paste in a message, click a button, and see whether it's classified as spam or ham with a confidence score.
+
+```bash
+streamlit run app.py
+```
+
+This opens automatically in your browser at `http://localhost:8501`. The model trains once when the app starts (a few seconds, cached after that) — no model files are saved to or loaded from disk, consistent with the rest of the project.
 
 ## Key Information
 
@@ -60,6 +71,7 @@ Full methodology, results, and discussion are in the project report (`.docx`).
 | File | Description |
 |---|---|
 | `*.ipynb` | Complete project code — data loading, preprocessing, model training, evaluation, ROC/AUC, deployment demo |
+| `app.py` | Streamlit web UI for trying the trained model interactively |
 | `requirements.txt` | Python dependencies |
 | `*_ProjectReport.docx` | Full project documentation and results |
 | `README.md` | This file |
